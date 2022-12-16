@@ -10,11 +10,13 @@
 <%-- search --%>
 <div class="search col-10 d-flex align-items-center">
 	<div>
-		<div class="input-group">
-			<input type="text" class="form-control">
-			<div class="input-group-append">
-				<button type="submit" class="btn btn-info">검색</button>
+		<form method="get" action="/lesson03/quiz02/detail_template.jsp">
+			<div class="input-group">
+				<input type="text" class="form-control" name="search" value="<%= request.getParameter("search") %>">
+				<div class="input-group-append">
+					<button type="submit" class="btn btn-info">검색</button>
+				</div>
 			</div>
-		</div>
+		</form>
 	</div>
 </div>

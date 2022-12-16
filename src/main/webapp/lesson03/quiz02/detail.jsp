@@ -1,9 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
 <%@page import="java.util.*"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%
 // 아티스트 정보 
-
     Map<String, Object> artistInfo = new HashMap<>();
     artistInfo.put("name", "아이유");
     artistInfo.put("debute", 2008);
@@ -79,47 +78,80 @@
     musicInfo.put("composer", "아이유,이종훈,이채규");
     musicInfo.put("lyricist", "아이유");
     musicList.add(musicInfo);
-%>	
+%>    
+
+<%
+	// 상세 정보를 보여줄 target map 세팅
+	Map<String, Object> target = null;
 	
+	// 1. 목록에서 클릭한 경우(id값) - a href
+	if (request.getParameter("id") != null) {
+		int id = Integer.parseInt(request.getParameter("id"));
+		for (Map<String, Object> item : musicList) {
+			if ((int)item.get("id") == id) {
+				target = item;
+				break;
+			}
+		}
+	}
 	
-<%-- 가수 정보 --%>
+	// 2. 상단에서 검색한 경우(search) - form
+	if (request.getParameter("search") != null) {
+		String search = request.getParameter("search");
+		for (Map<String, Object> item : musicList) {
+			if (item.get("title").equals(search)) {
+				target = item;
+				break;
+			}
+		}
+	}
+	
+	//out.print(target);
+%>
+ 
+<%
+	if (target != null) {
+%>  
+<%-- 곡 정보 --%>
+<h4 class="font-weight-bold mt-3">곡 정보</h4>
 <div class="border border-success p-3 d-flex">
 	<div class="mr-3">
-		<img src="<%=artistInfo.get("photo")%>" alt="가수 이미지" width="150">
+		<img src="<%= target.get("thumbnail") %>" alt="앨범 이미지" width="150">
 	</div>
 	<div>
-		<h3 class="font-weight-bold"><%=artistInfo.get("name")%></h3>
-		<div><%=artistInfo.get("agency")%></div>
-		<div><%=artistInfo.get("debute")%>
-			데뷔
+		<div class="display-4"><%= target.get("title") %></div>
+		<div class="text-success font-weight-bold"><%= target.get("singer") %></div>
+		<div class="music-info-text d-flex">
+			<div class="mr-3">
+				<div>앨범</div>
+				<div>재생시간</div>
+				<div>작곡가</div>
+				<div>작사가</div>
+			</div>
+			<div>
+				<div><%= target.get("album") %></div>
+				<div><%= (int)target.get("time") / 60 %>:<%= (int)target.get("time") % 60 %></div>
+				<div><%= target.get("composer") %></div>
+				<div><%= target.get("lyricist") %></div>
+			</div>
 		</div>
 	</div>
 </div>
 
-<%-- 곡 목록 --%>
-<div class="mt-3">
-	<h4 class="font-weight-bold">곡 목록</h4>
+<%-- 가사 정보 --%>
+<h4 class="font-weight-bold mt-3">가사</h4>
+<hr>
+<div>가사 정보 없음</div>
 
-	<table class="table text-center">
-		<thead>
-			<tr>
-				<th>No.</th>
-				<th>제목</th>
-				<th>앨범</th>
-			</tr>
-		</thead>
-		<tbody>
-			<%
-			for (Map<String, Object> item : musicList) {
-			%>
-			<tr>
-				<td><%=item.get("id")%></td>
-				<td><a href="/lesson03/quiz02/detail_template.jsp?id=<%=item.get("id")%>"><%=item.get("title")%></a></td>
-				<td><%=item.get("album")%></td>
-			</tr>
-			<%
-			}
-			%>
-		</tbody>
-	</table>
-</div>
+<%
+	}  //-- target null 아닌지 체크 끝 
+	else { // target이 없을 때 끝
+%>
+<h1>정보 없음</h1>
+<%
+	}  //-- target이 없을 때 끝
+%>
+
+
+
+
